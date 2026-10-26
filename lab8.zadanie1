@@ -17,3 +17,11 @@ class ArrayTask:
      def print_aray(self):
         formatted_array = [int(x) if x.is_integer() else x for x in self._array]
         print(f"Текущий массив: {formatted_array}")
+if __name__ == "__main__":
+    test_array = [1.0, 2.0, 3.0, 4.0, 5.0]
+    d_value = 1.0
+    task = ArrayTask(test_array)
+    task.print_array()
+    result = task.solve_task_6(d_value)
+    print(f"Величина d: {d_value}")
+    print(f"Количество элементов, удовлетворяющих условию: {result}")
