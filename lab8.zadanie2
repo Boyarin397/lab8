@@ -1,0 +1,88 @@
+class MatrixTask:
+    def __init__(self, matrix):
+        self._matrix = matrix
+        self.n = len(matrix)       # Количество строк
+        self.m = len(matrix[0]) if self.n > 0 else 0 # Количество столбцов
+
+    def find_saddle_points(self):
+        saddle_points = []
+        
+        if self.n == 0 or self.m == 0:
+            return saddle_points
+
+        for i in range(self.n):
+            for j in range(self.m):
+                current_val = self._matrix[i][j]
+                
+                # Находим максимум и минимум в текущей строке (i)
+                row_max = max(self._matrix[i])
+                row_min = min(self._matrix[i])
+                
+                # Находим максимум и минимум в текущем столбце (j)
+                col_max = max(self._matrix[r][j] for r in range(self.n))
+                col_min = min(self._matrix[r][j] for r in range(self.n))
+
+                # Проверяем условия для седловой точки:
+                # 1. Максимум в строке И минимум в столбце
+                is_max_row_min_col = (current_val == row_max) and (current_val == col_min)
+                
+                # 2. Минимум в строке И максимум в столбце
+                is_min_row_max_col = (current_val == row_min) and (current_val == col_max)
+
+                if is_max_row_min_col or is_min_row_max_col:
+                    saddle_points.append((i, j, current_val))
+                    
+        return saddle_points
+
+    def print_matrix(self):
+        print("Матрица:")
+        for row in self._matrix:
+            print("  [" + ", ".join(f"{x:3}" for x in row) + "]")
+if __name__ == "__main__":
+    # Тест 1: Классическая матрица с одной седловой точкой (5)
+    # 5 - максимум в строке (1, 2, 5) и минимум в столбце (5, 6, 7)
+    matrix1 = [
+        [1, 2, 5],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    task1 = MatrixTask(matrix1)
+    task1.print_matrix()
+    res1 = task1.find_saddle_points()
+    print(f"Седловые точки (строка, столбец, значение): {res1}")
+    print(f"Ожидалось: [(0, 2, 5)]\n")
+
+    # Тест 2: Обратный случай (минимум в строке, максимум в столбце)
+    # Элемент 3 (координаты 1, 1) - минимум в строке (9, 3, 8) и максимум в столбце (1, 3, 2)
+    matrix2 = [
+        [1, 9, 2],
+        [4, 3, 5],
+        [0, 2, 7]
+    ]
+    task2 = MatrixTask(matrix2)
+    task2.print_matrix()
+    res2 = task2.find_saddle_points()
+    print(f"Седловые точки (строка, столбец, значение): {res2}")
+    print(f"Ожидалось: [(1, 1, 3)]\n")
+
+    # Тест 3: Матрица без седловых точек
+    matrix3 = [
+        [1, 2],
+        [3, 4]
+    ]
+    task3 = MatrixTask(matrix3)
+    task3.print_matrix()
+    res3 = task3.find_saddle_points()
+    print(f"Седловые точки (строка, столбец, значение): {res3}")
+    print(f"Ожидалось: []\n")
+
+    # Тест 4: Матрица с несколькими седловыми точками  (например, все элементы одинаковы)
+    matrix4 = [
+        [5, 5],
+        [5, 5]
+    ]
+    task4 = MatrixTask(matrix4)
+    task4.print_matrix()
+    res4 = task4.find_saddle_points()
+    print(f"Седловые точки (строка, столбец, значение): {res4}")
+    print(f"Ожидалось: все 4 элемента (размер списка 4)\
